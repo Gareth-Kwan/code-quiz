@@ -38,6 +38,11 @@ var quizTimer = 0;
 var penalty = 10;
 var ulEl = document.createElement("ul");
 
+// High Score Variables
+var highScore = document.querySelector("#highScore");
+var clear = document.querySelector("#clear");
+// var goBack = document.querySelector("#goBack");
+
 // Event Listener for the begin button to begin the quiz
 startEL.addEventListener("click", function () {
   if (quizTimer === 0) {
@@ -74,6 +79,7 @@ function renderQuiz(questionBankIndex) {
     questionsEl.appendChild(ulEl);
     ulEl.appendChild(liEL);
     liEL.addEventListener("click", validateAnswer);
+    liEL.setAttribute("class", "choiceLi");
   });
 }
 
@@ -98,27 +104,111 @@ function validateAnswer(event) {
 
   if (questionBankIndex >= questionBank.length) {
     complete();
-    resultEl.textContent =
-      "End of quiz!" + " " + "You got  " + score + "/" + questionBank.length + " Correct!";
+    // resultEl.textContent = "";
   } else {
     renderQuiz(questionBankIndex);
   }
   questionsEl.appendChild(resultEl);
 }
 
+//  Creating the label for user to input initials
+
+var initialsLabel = document.createElement("label");
+initialsLabel.setAttribute("class", "inputInitials");
+initialsLabel.textContent = "Enter your initials here: ";
+
+var brEL = document.createElement("br");
+
+//  Creating the input field for user to input initials
+
+var initialInput = document.createElement("input");
+initialInput.setAttribute("type", "text");
+initialInput.setAttribute("class", "initials");
+initialInput.textContent = "";
+
+//  Creating the submit button for user to input initials
+var initialSubmit = document.createElement("button");
+initialSubmit.setAttribute("type", "submit");
+initialSubmit.setAttribute("class", "Submit");
+initialSubmit.textContent = "Submit";
+
 //Function to triggers when the quiz is complete or when the timer hits zero
 function complete() {
   questionsEl.innerHTML = "";
   timerEL.innerHTML = "";
+  timerEL.style.display = "none";
+
   //Message that triggers when the timer is at zero
   if (secondsLeft >= 0) {
     var pEl = document.createElement("p");
     clearInterval(quizTimer);
-    pEl.textContent = "Your final score is: " + score;
+    pEl.textContent = "End of quiz! You got  " + score + "/" + questionBank.length + " Correct!";
 
     questionsEl.appendChild(pEl);
   }
+  //Append the input elements for the final page
+  questionsEl.appendChild(initialsLabel);
+  questionsEl.appendChild(brEL);
+  questionsEl.appendChild(initialInput);
+  questionsEl.appendChild(initialSubmit);
 
-  //Creating the form for scores
-  var 
+  //Event Listener for Submit button
+  initialSubmit.addEventListener("click", function () {
+    var initials = initialInput.value;
+
+    if (initials === null || initials === "") {
+      alert("Please enter your initials.");
+    } else {
+      var finalScore = {
+        initials: initials,
+        score: secondsLeft,
+      };
+      //Store the data from final score to local storage
+      var scoreList = JSON.parse(localStorage.getItem("scoreList")) || [];
+      // Adds the final score to the score list array
+      scoreList.push(finalScore);
+      var newScore = JSON.stringify(scoreList);
+      localStorage.setItem("scoreList", newScore);
+      createHighScorePage();
+    }
+  });
+}
+
+//Function to create the high score page
+function createHighScorePage() {
+  //Clear the question div
+  questionsEl.innerHTML = "";
+  timerEL.innerHTML = "";
+
+  //Create new elements for the High Score Page
+  var highScoreTitle = document.createElement("h1");
+  highScoreTitle.setAttribute("class", "highScoreTitle");
+  highScoreTitle.textContent = "High Scores";
+
+  questionsEl.appendChild(highScoreTitle);
+
+  var clearButton = document.createElement("button");
+  clearButton.setAttribute("type", "reset");
+  clearButton.setAttribute("class", "clearButton");
+  clearButton.textContent = "Clear High Score";
+
+  // Get data from local storage
+  var scoreList = localStorage.getItem("scoreList");
+  scoreList = JSON.parse(scoreList);
+
+  //Print out all the high scores
+  if (scoreList !== null) {
+    for (var i = 0; i < scoreList.length; i++) {
+      var scoreLi = document.createElement("li");
+      scoreLi.setAttribute("class", "scoreLi");
+      scoreLi.textContent = scoreList[i].initials + "'s High Score:  " + scoreList[i].score;
+      questionsEl.appendChild(scoreLi);
+    }
+  }
+  questionsEl.appendChild(clearButton);
+  //Event listener to clear the high score page
+  clearButton.addEventListener("click", function () {
+    localStorage.clear();
+    location.reload();
+  });
 }

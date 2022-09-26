@@ -65,7 +65,7 @@
   display: none;
 }
 
-li {
+.choiceLi {
   display: flex;
   list-style-type: none;
   cursor: pointer;
@@ -75,9 +75,9 @@ li {
   border-radius: 25px;
   padding: 1%;
   margin: 3%;
-  width: 25%;
+  width: 35%;
   justify-content: center;
-  margin-left: 34%;
+  margin-left: 28%;
   margin-right: 55%;
   margin-top: 3%;
   background-color: white;
@@ -92,4 +92,37 @@ li {
 .answerResult {
   margin-left: auto;
   margin-right: auto;
+}
+
+.answerResult {
+  padding: 2%;
+}
+
+.clearButton {
+  background-image: linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19);
+  box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+  border-radius: 50px;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  padding: 1%;
+}
+
+.scoreLi {
+  display: flex;
+  list-style-type: none;
+  cursor: pointer;
+  color: #fff;
+  background-image: linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19);
+  box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+  border-radius: 25px;
+  padding: 1%;
+  margin: 3%;
+  width: 35%;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3%;
+  background-color: white;
 }
